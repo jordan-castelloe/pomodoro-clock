@@ -2,11 +2,13 @@ $(document).ready(function() {
 
 var seconds = 60;
 var minutes = 24;
+var countdown = null;
+var alarm = new Audio("meadowlark.wav");
+
 
 
 function timer(minutes) {
 
-setInterval(function(){
   seconds -= 1; // decrease the number of seconds by one
 
   if (seconds < 10){
@@ -14,33 +16,36 @@ setInterval(function(){
   }
 
   if (seconds == 0){ // when seconds counter gets to zero
-    seconds = 59; // start second counter over
+    seconds = 60; // start second counter over
     minutes -= 1; // subtract a minute
   }
 
-  if (minutes < 0){  // when the minute counter gets to zero,stop the timer
+  if (minutes < 0){  // when the minute counter gets to zero,stop the timer and play the alarm
      clearInterval(countdown);
-  }
+     alarm.play();
+     setTimeout(function(){
+            alarm.pause()}, 6000)}
 
+    $('#seconds').text(seconds); // write out the number of seconds
+    $('#minutes').text(minutes); // write out the number of minutes
+
+}
+
+// start 25 minute timer when you click on "start work"
+$('#start-work').click(function(){
+    clearInterval(countdown);
+    countdown = setInterval(function(){timer(24)}, 1000);
+  });
+
+// pause timer when you click "pause"
   $('#pause').click(function(){
     clearInterval(countdown);
   });
 
-
-    $('#seconds').text(seconds); // write out the number of seconds
-    $('#minutes').text(minutes); // write out the number of minutes
-}, 1000);
-
-}
-
-$('#start-work').click(function(){
-      timer(24);
-  });
-
-
-
+// start 5 minute timer when you click on "start break"
 $('#start-break').click(function(){
-  timer(4);
+  clearInterval(countdown);
+  countdown = setInterval(function(){timer(4)}, 1000);
 });
 
   // bold buttons when mouse hovers over them
